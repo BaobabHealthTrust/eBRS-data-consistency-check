@@ -1,0 +1,58 @@
+<style>
+  .main-links { display: none !important; }
+
+  .brand-name { display: inline; }                                              
+                                                                                
+  #image-logo {                                                                 
+    position: relative;                                                         
+    float: left;                                                                
+    height:385px;                                                               
+    /*padding-top: 15px;*/
+    margin: 10px 170px 0px 170px;
+    width: 375px;
+  }  
+
+  body {
+    background-color: #0A4958;
+    background-size: 41%;
+  }
+
+  h1 { color: oldlace; }
+
+  .page-header {
+    margin: 10px 170px 0;
+  }
+
+  form {
+    margin-top: 10px;
+    float: right;
+  }
+
+  img {
+    height: 120px;
+    width: 120px;
+  }
+</style>
+
+<div class="page-header">                                               
+  <h1><%=organization_name %> <small> data consistency check</small></h1>
+</div>                                                                  
+
+<div id = "image-logo">                                                 
+<%= image_tag("keys.png" ,:id => "keys")%>                              
+
+<%= form_tag :controller => 'user', :action => 'login', :method => :post do %> 
+<table>                                                                 
+  <tr>                                                                  
+    <td><%=text_field(:user, :username, :textCase => "lower",:placeholder => "username") %></td>
+  </tr>                                                                 
+  <tr>                                                                  
+    <td>                                                                
+      <%=password_field(:user, :password, :textCase => "lower",         
+      :placeholder => "password", :style => "width: 155px;") %>         
+      <%= submit_tag "Login" ,:class => "btn btn-primary" , :style => "position: relative;top: -5px;"%>
+    </td>                                                               
+  </tr>                                                                 
+</table>                                                                
+<%end%>
+</div>
