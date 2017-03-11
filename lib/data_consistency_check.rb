@@ -21,9 +21,15 @@ module DataConsistencyCheck
       data = ['Init'] ; page = 1
 
       while data.present? do 
-        data = Child.by_district_id_number.page(page).per(2000).each
+        data = Child.by_district_id_number.page(page).per(100).each
         puts "................. #{page}    ::::: #{check}"
-        break if data.blank?
+
+        begin
+          break if data.first.blank?
+        rescue
+          break
+        end
+
         (data || []).each do |d|
           identifier = d.send(check)
           next if identifier.blank?
@@ -44,6 +50,45 @@ module DataConsistencyCheck
     end
   
     return inconsistent_data
+  end
+
+  def self.render_inconsistent_data
+    file_path = "#{Rails.root}/app/assets/data/inconsistent_data.json"
+    return {} unless File.exists?(file_path)
+    records = eval(File.read(file_path))
+    
+    inconsistents = {}
+
+    (records || {}).map do |r, data|
+      inconsistents[r] = [] if inconsistents[r].blank?
+      (data || []).each do |d|
+        inconsistents[r] << d
+        inconsistents[r] = inconsistents[r].uniq
+      end
+    end
+
+    rendered_text = {}
+    (inconsistents || {}).each do |r, data|
+      if r == 'district_id_number'
+        (data || []).each do |d|
+          
+          rendered_text['BEN'] = {} if rendered_text['BEN'].blank?
+          ben_year = d[-4..-1].to_i
+
+          rendered_text['BEN'][ben_year] = {errors: 0, identifier: 'BEN: Birth registration number',
+            description: "BENs assigned in #{ben_year}", records: []
+          } if rendered_text['BEN'][ben_year].blank?
+
+
+
+          rendered_text['BEN'][ben_year][:errors] += 1
+          rendered_text['BEN'][ben_year][:records] << d
+        end
+      end
+    end
+
+
+    return rendered_text
   end
 
 end

@@ -118,7 +118,10 @@ function buildDIVS() {
   var mainDiv = document.getElementById('data-checks-table');
   var tableRow = document.createElement('div');
 
-  <%(@fetched_data || []).each do |data|%>
+  <%(@fetched_data || {}).each do |r, years|
+    (years || {}).each do |year, data|
+      #raise data.inspect
+  %>
     tableRow.setAttribute('class','table-row');
 
 
@@ -146,7 +149,7 @@ function buildDIVS() {
         s.innerHTML = "<%=data[:identifier]%>";
         s.setAttribute('class','identifiers');
       }else{
-        s.innerHTML = "<%=data[:description]%>";
+        s.innerHTML = "<b>DESC:</b> <%=data[:description]%>";
         s.setAttribute('class','descriptions');
       }
       cellMin.appendChild(s);
@@ -169,7 +172,8 @@ function buildDIVS() {
       tableRow = document.createElement('div');
       counter = 0;
     }
-  <%end%>
+  <%end
+  end%>
 
 }
  
