@@ -49,7 +49,15 @@ module DataConsistencyCheck
     
     end
   
-    return inconsistent_data
+    file_path = "#{Rails.root}/app/assets/data/inconsistent_data.json"
+    if File.exists?(file_path)
+      file = File.new(file_path, 'w')
+    end
+
+    File.open("#{Rails.root}/app/assets/data/inconsistent_data.json", 'w+') do |f|
+      f.puts(inconsistent_data)
+    end
+
   end
 
   def self.render_inconsistent_data
