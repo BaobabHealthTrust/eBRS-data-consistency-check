@@ -143,7 +143,7 @@ function buildDIVS() {
   var tableRow = document.createElement('div');
 
   <%(@fetched_data || {}).each do |r, years|
-    (years || {}).each do |year, data|
+    (years || {}).sort_by{|x,y| x}.reverse.each do |year, data|
       #raise data.inspect
   %>
     tableRow.setAttribute('class','table-row');

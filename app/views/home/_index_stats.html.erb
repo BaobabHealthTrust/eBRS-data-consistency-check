@@ -8,6 +8,7 @@
 
 var chartDataCategories = [];
 var chartDataSeries = {};
+var seriesNames = [];
 
 function isEmpty(obj) {
     for(var prop in obj) {
@@ -19,8 +20,9 @@ function isEmpty(obj) {
 }
 
 
-<%(@fetched_data || {}).each do |r, years|
-  (years || {}).sort_by{|x, y | x}.reverse.each do |year, data|%>
+<%(@fetched_data || {}).sort_by{|x , y| y}.each do |r, years|%>
+  seriesNames.push('<%= r %>');
+  <%(years || {}).sort_by{|x, y | x}.reverse.each do |year, data|%>
  
     if(isEmpty(chartDataSeries["<%= r %>"])) {
       chartDataSeries["<%= r %>"] = {};
@@ -81,14 +83,15 @@ function drawChart() {
 
 function sortSeries(obj) {
   serieHash = [];
- 
-  for(var series_name in obj) {
-    var identifiers = [];
-    for(year in obj[series_name]) {
-      identifiers.push(obj[series_name][year]);
+  var identifiers = [];
+
+  for(var x = 0; x < seriesNames.length; x++) { 
+    for(var i = 0; i < chartDataCategories.length; i++) {
+      var errors = (obj[seriesNames[x]][chartDataCategories[i]]);
+      identifiers.push(errors);
     }
-    serieHash.push({ name: series_name, data: identifiers  });
-    break;
+    
+    serieHash.push({ name: seriesNames, data: identifiers  });
   }
 
   return serieHash;
