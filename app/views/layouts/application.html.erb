@@ -62,6 +62,9 @@
     	</div>
 
         <div class="container" style="width: 99%;">
+        
+        <%=javascript_include_tag "Highcharts_4_0_4/jquery.min"%>
+        <%=javascript_include_tag "IE/bootstrap"%>                                         
         <section id="modals">
           <%=yield%>
         </section>
@@ -74,11 +77,6 @@
         </div>
 
 
-        <%#=javascript_include_tag "IE/jquery-1.7.1.min"%>                                         
-        <%unless action_name == 'menu' || @nojquery %>
-          <%=javascript_include_tag "IE/jquery-1.8.2"%>
-        <%end%>
-        <%=javascript_include_tag "IE/bootstrap"%>                                         
         <script type="text/javascript">
 			$(function(){if($.browser.msie&&parseInt($.browser.version,10)===6){$('.row div[class^="span"]:last-child').addClass("last-child");$('[class*="span"]').addClass("margin-left-20");$('[class*="span"][class*="offset"]').removeClass('margin-left-20');$(':button[class="btn"], :reset[class="btn"], :submit[class="btn"], input[type="button"]').addClass("button-reset");$(":checkbox").addClass("input-checkbox");$('[class^="icon-"], [class*=" icon-"]').addClass("icon-sprite");$(".pagination li:first-child a").addClass("pagination-first-child")}
 				

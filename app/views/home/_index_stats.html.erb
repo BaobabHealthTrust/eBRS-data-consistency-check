@@ -1,0 +1,105 @@
+
+
+<style type="text/css">
+  ${demo.css}
+</style>
+
+<script type="text/javascript">
+
+var chartDataCategories = [];
+var chartDataSeries = {};
+
+function isEmpty(obj) {
+    for(var prop in obj) {
+        if(obj.hasOwnProperty(prop))
+            return false;
+    }
+
+    return true;
+}
+
+
+<%(@fetched_data || {}).each do |r, years|
+  (years || {}).sort_by{|x, y | x}.reverse.each do |year, data|%>
+ 
+    if(isEmpty(chartDataSeries["<%= r %>"])) {
+      chartDataSeries["<%= r %>"] = {};
+      chartDataSeries["<%= r %>"][<%=year%>] = [];
+    }else if(isEmpty(chartDataSeries["<%= r %>"][<%=year%>]) ) {
+      chartDataSeries["<%= r %>"][<%=year%>] = 0;
+    }
+   
+    try{
+      chartDataSeries["<%= r %>"][<%=year%>] = parseInt("<%=data[:errors]%>");
+    }catch(e) {
+      chartDataSeries["<%= r %>"][<%=year%>] = 0;
+    }
+
+    chartDataCategories.push(<%=year%>);
+<%end
+end
+%>
+
+
+function drawChart() {
+
+    $('#stats-container').highcharts({
+      chart: {
+          type: 'column'
+      },
+      title: {
+          text: 'Duplicate cases'
+      },
+      subtitle: {
+          text: ''
+      },
+      exporting: {
+        enabled: false
+      },
+      credits: {
+        enabled: false
+      },
+      xAxis: {
+          categories: chartDataCategories
+      },
+      yAxis: {
+          min: 0,
+          title: {
+              text: 'No. records'
+          }
+      },
+      plotOptions: {
+          column: {
+              pointPadding: 0.2,
+              borderWidth: 0
+          }
+      },
+      series: sortSeries(chartDataSeries)
+    });
+
+}
+
+function sortSeries(obj) {
+  serieHash = [];
+ 
+  for(var series_name in obj) {
+    var identifiers = [];
+    for(year in obj[series_name]) {
+      identifiers.push(obj[series_name][year]);
+    }
+    serieHash.push({ name: series_name, data: identifiers  });
+    break;
+  }
+
+  return serieHash;
+}
+
+</script>
+</head>
+
+<%=javascript_include_tag "Highcharts_4_0_4/js/highcharts"%>
+<%=javascript_include_tag "Highcharts_4_0_4/js/modules/exporting"%>
+
+<div id="stats-container" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+
+<script>drawChart();</script>

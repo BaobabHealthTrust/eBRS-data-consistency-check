@@ -64,14 +64,38 @@
   border-width: 0px 0px 1px 0px;
   font-weight: bold;
 }
+
+.left-cell {
+  width: 45%;
+  vertical-align: top;
+}
+
+.right-cell {
+  vertical-align: top;
+  width: 55%;
+}
+
+
 </style>
 
 
 <hr />
 
-<div class="table-div" id="data-checks-table">
-</div>
+<div class="table-div">
+  <div class="table-row">
+    
+    <div class="table-cell left-cell">
+      <div class="table-div" id="data-checks-table">
+      </div>
+    </div>
 
+    <div class="table-cell right-cell">
+      <%= render :partial => 'index_stats'%>
+    </div>
+
+
+  </div>
+</div>
 
 <script>
 
