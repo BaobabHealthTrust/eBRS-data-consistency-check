@@ -5,6 +5,11 @@ Rails.application.routes.draw do
   post '/login' => 'user#login'
   ####################### user section end ################################
 
+  ####################### person section ################################
+  post '/duplicates' => 'person#duplicates'
+  ####################### person section ################################
+
+
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 

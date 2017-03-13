@@ -151,6 +151,8 @@ function buildDIVS() {
 
     var tableCell = document.createElement('table-cell');
     tableCell.setAttribute('class','table-cell');
+    tableCell.setAttribute('onclick','showIdentifiers(this)');
+    tableCell.setAttribute('id',"btn_<%=r%>_<%=year%>");
     tableRow.appendChild(tableCell);
 
     minTableCounter = 3
@@ -188,6 +190,12 @@ function buildDIVS() {
       minTableCounter --;
     }
 
+    var hiddenInput = document.createElement('input');
+    hiddenInput.setAttribute('type','hidden');
+    hiddenInput.setAttribute('value',"<%= data[:records].join(',') %>");
+    hiddenInput.setAttribute('id',"identifiers_for_<%=r%>_<%=year%>");
+    mainDiv.appendChild(hiddenInput);
+
 
     mainDiv.appendChild(tableRow);
     counter++;
@@ -199,6 +207,25 @@ function buildDIVS() {
   <%end
   end%>
 
+}
+
+function showIdentifiers(e) {
+  clicked_btn_id = (e.id).replace('btn_','');
+  identifiers = document.getElementById('identifiers_for_' + clicked_btn_id);
+
+  var form = document.createElement('form');
+  form.setAttribute('method','post');
+  form.setAttribute('action','/duplicates');
+  form.setAttribute('type','hidden');
+
+  var hiddenInput = document.createElement('input'); 
+  hiddenInput.setAttribute('type','hidden');
+  hiddenInput.setAttribute('value', identifiers.value);
+  hiddenInput.setAttribute('name',"identifiers");
+  form.appendChild(hiddenInput);
+
+  document.body.appendChild(form);
+  form.submit();
 }
  
 buildDIVS();

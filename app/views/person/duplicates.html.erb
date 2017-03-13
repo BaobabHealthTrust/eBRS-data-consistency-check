@@ -1,0 +1,63 @@
+<style>
+h1 {
+  margin-bottom: 50px;
+  border-style: solid;
+  border-width: 0px 0px 1px 0px;
+  border-color: blue;
+}
+
+</style>
+
+<h1>Duplicates</h1>
+
+
+
+<%=javascript_include_tag "DataTables/jquery"%>
+<%=javascript_include_tag "DataTables/jquery.dataTables.min"%>
+<%= stylesheet_link_tag "DataTables/jquery.dataTables" %>
+<%= stylesheet_link_tag "DataTables/demo_table_jui" %>
+<%= stylesheet_link_tag "DataTables/demo_page" %>
+<%= stylesheet_link_tag "DataTables/jquery-ui" %>
+
+<script>
+
+var dataTable = null;
+
+function dataT(){          
+  dataTable = jQuery('#duplicates').dataTable();                                                  
+}
+
+
+</script>
+
+
+<table id="duplicates">
+  <head>
+    <tr>
+      <th>BEN</th>
+      <th>NSN</th>
+      <th>First name</th>
+      <th>Middle name</th>
+      <th>Last name</th>
+      <th>Gender</th>
+      <th>DOB</th>
+    </tr>
+  </head>
+  <tbody>
+  <%(@person || []).each do |person|%>
+    <tr>
+      <td><%= person.district_id_number %></td>
+      <td><%= person.national_serial_number %></td>
+      <td><%= person.first_name %></td>
+      <td><%= person.middle_name %></td>
+      <td><%= person.last_name %></td>
+      <td><%= person.gender %></td>
+      <td><%= person.birthdate %></td>
+    </tr>
+  <%end%>
+  </tbody>
+</table>
+
+<script>                                                                        
+  dataT();                   
+</script>                                                                        
