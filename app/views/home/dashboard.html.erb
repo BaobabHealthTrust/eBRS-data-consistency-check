@@ -1,0 +1,237 @@
+
+<%= stylesheet_link_tag "IE/bootstrap" %>                                         
+<%=javascript_include_tag "Highcharts_4_0_4/jquery.min"%>
+<style>
+
+.table-div {
+  display: table;
+  width: 100%;
+}
+
+.table-row  {
+  display: table-row;
+}
+
+.table-cell {
+  display: table-cell;
+}
+
+.data-table {
+  height: 150px;
+  width: 90%;
+  border-style: solid;
+  border-width: 1px;
+  padding: 5px;
+  
+  display: table;
+  margin-top: 10px;
+  cursor:pointer;
+  box-shadow: 10px 10px 5px #888888;
+  background-color: white;
+  border: 1px solid #2e6da4;
+}
+
+.lines {
+  background-color: blue;
+  height: 3px;
+  margin-top: 30px;
+}
+
+/*
+.icon-attr {
+  height: 40%;
+  width: 40%;
+  padding-top: 10px;
+}
+
+.divbtn {
+  height: 150px;
+  width: 99%;
+  display: table;
+  margin-top: 10px;
+  cursor:pointer;
+  box-shadow: 10px 10px 5px #888888;
+  text-align: center;
+  background-color: white;
+  border: 1px solid #2e6da4;
+}
+*/
+
+.big-numbers {
+  font-size: 50px;
+  top: 15px ;
+  position: relative;
+}
+
+.identifiers {
+  border-style: solid;
+  border-width: 0px 0px 1px 0px;
+  font-weight: bold;
+}
+
+.left-cell {
+  width: 45%;
+  vertical-align: top;
+  padding-left: 10px;
+}
+
+.right-cell {
+  vertical-align: top;
+  width: 55%;
+}
+
+
+</style>
+
+
+<hr />
+
+<div class="table-div">
+  <div class="table-row">
+    
+    <div class="table-cell left-cell">
+      <div class="table-div" id="data-checks-table">
+      </div>
+    </div>
+
+    <div class="table-cell right-cell">
+      <%= render :partial => 'index_stats'%>
+    </div>
+
+
+  </div>
+</div>
+
+<script>
+
+
+
+
+
+
+/*
+  <div class="table-row">
+    <!-- start of cell -->
+    <div class="table-cell">
+
+      <div class="table-div data-table">
+        <div class="table-row data-row">
+          <div class="table-cell data-cell">
+            <span>18</span>
+          </div>
+        </div>
+        <div class="table-row data-row">
+          <div class="table-cell data-cell">
+            <span>Num desc</span>
+          </div>
+        </div>
+        <div class="table-row data-row">
+          <div class="table-cell data-cell">
+            <hr />
+          </div>
+        </div>
+        <div class="table-row data-row">
+          <div class="table-cell data-cell">
+            <span>dehhhhhdhdhd</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- end of cell -->
+  </div>
+*/
+
+function buildDIVS() {
+
+  var counter = 0;
+  var mainDiv = document.getElementById('data-checks-table');
+  var tableRow = document.createElement('div');
+
+  <%(@fetched_data || {}).each do |r, years|
+    (years || {}).sort_by{|x,y| x}.reverse.each do |year, data|
+      #raise data.inspect
+  %>
+    tableRow.setAttribute('class','table-row');
+
+
+    var tableCell = document.createElement('table-cell');
+    tableCell.setAttribute('class','table-cell');
+    tableCell.setAttribute('onclick','showIdentifiers(this)');
+    tableCell.setAttribute('id',"btn_<%=r%>_<%=year%>");
+    tableRow.appendChild(tableCell);
+
+    minTableCounter = 3
+    var tableDiv = document.createElement('div');
+    tableDiv.setAttribute('class','table-div data-table');
+    tableCell.appendChild(tableDiv);
+
+    while (minTableCounter > 0) {
+      var rowMin = document.createElement('div');
+      rowMin.setAttribute('class','table-row data-row');
+      var cellMin = document.createElement('div');
+      cellMin.setAttribute('class','table-cell data-cell');
+      rowMin.appendChild(cellMin);
+
+      var s = document.createElement('span');
+      if(minTableCounter == 3) {
+        s.setAttribute('class','big-numbers');
+        s.innerHTML = "<%=data[:errors]%>";
+      }else if(minTableCounter == 2){
+        s.innerHTML = "<%=data[:identifier]%>";
+        s.setAttribute('class','identifiers');
+      }else{
+        s.innerHTML = "<b>DESC:</b> <%=data[:description]%>";
+        s.setAttribute('class','descriptions');
+      }
+      cellMin.appendChild(s);
+    
+      if(minTableCounter > 2) {
+        var hr = document.createElement('hr');
+        hr.setAttribute('class','lines');
+        cellMin.appendChild(hr);
+      }
+
+      tableDiv.appendChild(rowMin);  
+      minTableCounter --;
+    }
+
+    var hiddenInput = document.createElement('input');
+    hiddenInput.setAttribute('type','hidden');
+    hiddenInput.setAttribute('value',"<%= data[:records].join(',') %>");
+    hiddenInput.setAttribute('id',"identifiers_for_<%=r%>_<%=year%>");
+    mainDiv.appendChild(hiddenInput);
+
+
+    mainDiv.appendChild(tableRow);
+    counter++;
+    
+    if(counter == 5) {
+      tableRow = document.createElement('div');
+      counter = 0;
+    }
+  <%end
+  end%>
+
+}
+
+function showIdentifiers(e) {
+  clicked_btn_id = (e.id).replace('btn_','');
+  identifiers = document.getElementById('identifiers_for_' + clicked_btn_id);
+
+  var form = document.createElement('form');
+  form.setAttribute('method','post');
+  form.setAttribute('action','/duplicates');
+  form.setAttribute('type','hidden');
+
+  var hiddenInput = document.createElement('input'); 
+  hiddenInput.setAttribute('type','hidden');
+  hiddenInput.setAttribute('value', identifiers.value);
+  hiddenInput.setAttribute('name',"identifiers");
+  form.appendChild(hiddenInput);
+
+  document.body.appendChild(form);
+  form.submit();
+}
+ 
+buildDIVS();
+</script>

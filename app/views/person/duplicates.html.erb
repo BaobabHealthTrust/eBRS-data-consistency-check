@@ -12,19 +12,21 @@ h1 {
 
 
 
-<%#=javascript_include_tag "DataTables/jquery"%>
-<%#=javascript_include_tag "DataTables/jquery.dataTables.min"%>
-<%#= stylesheet_link_tag "DataTables/jquery.dataTables" %>
-<%#= stylesheet_link_tag "DataTables/demo_table_jui" %>
-<%#= stylesheet_link_tag "DataTables/demo_page" %>
-<%#= stylesheet_link_tag "DataTables/jquery-ui" %>
+<%=javascript_include_tag "DataTables/jquery"%>
+<%=javascript_include_tag "DataTables/jquery.dataTables.min"%>
+
+<%= stylesheet_link_tag "DataTables/jquery.dataTables" %>
+<%= stylesheet_link_tag "DataTables/demo_table_jui" %>
+<%= stylesheet_link_tag "DataTables/demo_page" %>
+<%= stylesheet_link_tag "DataTables/jquery-ui" %>
 
 <script>
 
-var dataTable = null;
+var dataT = null;
 
-function dataT(){          
-  dataTable = jQuery('#duplicates').dataTable();                                                  
+function initDataTable(){          
+  dataT = jQuery('#duplicates');
+  dataT.dataTable();                                                  
 }
 
 
@@ -59,5 +61,5 @@ function dataT(){
 </table>
 
 <script>                                                                        
-  //dataT();                   
+  initDataTable();                   
 </script>                                                                        
